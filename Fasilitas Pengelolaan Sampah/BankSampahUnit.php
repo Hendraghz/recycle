@@ -269,25 +269,28 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>2023</td>
-                      <td>Kab Bandung</td>
-                      <td>Bank Sampah Bandung</td>
-                      <td>BSU</td>
-                      <td>A</td>
-                      <td>180.00</td>
-                      <td>180.00</td>
-                    </tr>
-                    <tr>
-                      <td>2023</td>
-                      <td>KoTA Garut</td>
-                      <td>Bank Sampah Garut</td>
-                      <td>BSU</td>
-                      <td>A</td>
-                      <td>180.00</td>
-                      <td>180.00</td>
-                    </tr>
-                    </tr>
+                    <?php
+                    include '../koneksi.php';
+                    // Ganti 'jenis_fasilitas' dengan nama kolom yang sesuai di tabel Anda
+                    $tipe_fasilitas = "Bank Unit"; // Ganti dengan tipe fasilitas yang diinginkan
+                    $result = $koneksi->query("SELECT tahun, kab, nama_fasilitas, jenis, status, sampah_masuk, sampah_terkelola FROM fasilitas WHERE tipe_fasilitas = '$tipe_fasilitas'");
+
+                    if ($result->num_rows > 0) {
+                      while ($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                              <td>{$row['tahun']}</td>
+                              <td>{$row['kab']}</td>
+                              <td>{$row['nama_fasilitas']}</td>
+                              <td>{$row['jenis']}</td>
+                              <td>{$row['status']}</td>
+                              <td>{$row['sampah_masuk']}</td>
+                              <td>{$row['sampah_terkelola']}</td>
+                            </tr>";
+                      }
+                    } else {
+                      echo "<tr><td colspan='7'>No data found</td></tr>";
+                    }
+                    ?>
                   </tbody>
                 </table>
               </div>
