@@ -1,0 +1,21 @@
+.animated-element,
+.animated-element-left {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.animated-element {
+  transform: translateX(250px);
+}
+
+.animated-element-left {
+  transform: translateX(-250px);
+}
+
+.animated-element.show,
+.animated-element-left.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+
