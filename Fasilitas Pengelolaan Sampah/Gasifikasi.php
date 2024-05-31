@@ -230,30 +230,6 @@
         <div class="row gx-5 justify-content-center">
           <div class="col-xxl-12 col-12">
             <h4 class="text-center">Data Sumber Energi (GASIFIKASI)</h4>
-            <div class="category py-3 px-4">
-              <div class="card border-0 shadow-lg">
-                <div class="card-body d-flex align-items-center gap-3">
-                  <div class="tahun">
-                    <h6 class="mb-2 text-body-secondary">Tahun</h6>
-                    <select id="select" class="custom-select rounded-2">
-                      <option value="1">2022</option>
-                      <option value="2" selected>2023</option>
-                      <option value="3">2024</option>
-                      <option value="3">2025</option>
-                    </select>
-                  </div>
-                  <div class="kab">
-                    <h6 class="mb-2 text-body-secondary">Kabupaten/Kota</h6>
-                    <select id="select" class="custom-select rounded-2">
-                      <option value="1">Kab Bandung</option>
-                      <option value="2" selected>Kota Bandung</option>
-                      <option value="3">Kota Garut</option>
-                      <option value="3">Kota Cimahi</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="card border-0 shadow-lg mt-5">
               <div class="card-body">
                 <table id="example" class="table table-striped" style="width:100%">
@@ -269,25 +245,28 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>2023</td>
-                      <td>Kab Bandung</td>
-                      <td>Mandiri Energi Bandung</td>
-                      <td>Gasifikasi</td>
-                      <td>A</td>
-                      <td>180.00</td>
-                      <td>180.00</td>
-                    </tr>
-                    <tr>
-                      <td>2023</td>
-                      <td>Kota Garut</td>
-                      <td>Mandiri Energi Garut</td>
-                      <td>Gasifikasi</td>
-                      <td>A</td>
-                      <td>180.00</td>
-                      <td>180.00</td>
-                    </tr>
-                    </tr>
+                    <?php
+                    include '../koneksi.php';
+                    // Ganti 'jenis_fasilitas' dengan nama kolom yang sesuai di tabel Anda
+                    $tipe_fasilitas = "Gasifikasi"; // Ganti dengan tipe fasilitas yang diinginkan
+                    $result = $koneksi->query("SELECT tahun, kab, nama_fasilitas, jenis, status, sampah_masuk, sampah_terkelola FROM fasilitas WHERE tipe_fasilitas = '$tipe_fasilitas'");
+
+                    if ($result->num_rows > 0) {
+                      while ($row = $result->fetch_assoc()) {
+                        echo "<tr>
+                              <td>{$row['tahun']}</td>
+                              <td>{$row['kab']}</td>
+                              <td>{$row['nama_fasilitas']}</td>
+                              <td>{$row['jenis']}</td>
+                              <td>{$row['status']}</td>
+                              <td>{$row['sampah_masuk']}</td>
+                              <td>{$row['sampah_terkelola']}</td>
+                            </tr>";
+                      }
+                    } else {
+                      echo "<tr><td colspan='7'>No data found</td></tr>";
+                    }
+                    ?>
                   </tbody>
                 </table>
               </div>

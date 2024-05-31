@@ -230,30 +230,6 @@
         <div class="row gx-5 justify-content-center">
           <div class="col-xxl-12 col-12">
             <h4 class="text-center">Data Bank Sampah Unit</h4>
-            <div class="category py-3 px-4">
-              <div class="card border-0 shadow-lg">
-                <div class="card-body d-flex align-items-center gap-3">
-                  <div class="tahun">
-                    <h6 class="mb-2 text-body-secondary">Tahun</h6>
-                    <select id="select" class="custom-select rounded-2">
-                      <option value="1">2022</option>
-                      <option value="2" selected>2023</option>
-                      <option value="3">2024</option>
-                      <option value="3">2025</option>
-                    </select>
-                  </div>
-                  <div class="kab">
-                    <h6 class="mb-2 text-body-secondary">Kabupaten/Kota</h6>
-                    <select id="select" class="custom-select rounded-2">
-                      <option value="1">Kab Bandung</option>
-                      <option value="2" selected>Kota Bandung</option>
-                      <option value="3">Kota Garut</option>
-                      <option value="3">Kota Cimahi</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="card border-0 shadow-lg mt-5">
               <div class="card-body">
                 <table id="example" class="table table-striped" style="width:100%">

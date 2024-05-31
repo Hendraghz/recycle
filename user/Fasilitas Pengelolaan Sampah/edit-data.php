@@ -1,13 +1,21 @@
 <?php
-
 session_start();
+include '../../koneksi.php';
 
-if (!isset($_SESSION['username'])) {
-  header('Location: ../auth-login.php');
-  exit();
+$id = $_GET['id'];
+
+// Fetch the existing data
+$query = "SELECT * FROM fasilitas WHERE id = ?";
+$stmt = $koneksi->prepare($query);
+$stmt->bind_param('i', $id);
+$stmt->execute();
+$result = $stmt->get_result();
+$data = $result->fetch_assoc();
+
+if (!$data) {
+  echo "Data not found!";
+  exit;
 }
-
-require_once ('../../koneksi.php');
 
 ?>
 
@@ -166,40 +174,48 @@ require_once ('../../koneksi.php');
 
               <div class="card-body">
                 <div class="row">
-                  <form action="input.php" method="post" enctype="multipart/form-data">
+                  <form action="update.php?id=<?= $id ?>" method="post" enctype="multipart/form-data">
                     <div class="col">
                       <div class="form-group">
-                        <input type="hidden" name="username" value="<?= $_SESSION['username'] ?>" class="form-control"
-                          id="basicInput" placeholder="Nama Panggilan" />
+                        <input type="hidden" name="username" value="<?= $_SESSION['username'] ?>"
+                          class="form-control" />
                       </div>
                     </div>
                     <div class="col">
                       <label for="basicInput">Tipe Fasilitas</label>
                       <fieldset class="form-group">
                         <select class="form-select" id="basicSelect" name="tipe_fasilitas">
-                          <option value="Bank Induk">Bank Induk</option>
-                          <option value="Bank Unit">Bank Unit</option>
-                          <option value="Komposting Skala RT/RW">Komposting Skala RT/RW</option>
-                          <option value="Rumah Kompos">Rumah Kompos</option>
-                          <option value="Pusat Olah Organik (POO)">Pusat Olah Organik (POO)</option>
-                          <option value="TPS3R">TPS3R</option>
-                          <option value="Pusat Daur Ulang (PDU)">Pusat Daur Ulang (PDU)</option>
-                          <option value="TPST di luar TPA">TPST di luar TPA</option>
-                          <option value="ITF">ITF</option>
-                          <option value="Biodigester">Biodigester</option>
-                          <option value="Insinerator">Insinerator</option>
-                          <option value="Pirolisis">Pirolisis</option>
-                          <option value="Gasifikasi">Gasifikasi</option>
-                          <option value="RDF">RDF</option>
-                          <option value="TPA/TPST">TPA/TPST</option>
-                          <option value="Sektor Informal">Sektor Informal</option>
+                          <option value="Bank Induk" <?= $data['tipe_fasilitas'] == 'Bank Induk' ? 'selected' : '' ?>>Bank
+                            Induk</option>
+                          <option value="Bank Unit" <?= $data['tipe_fasilitas'] == 'Bank Unit' ? 'selected' : '' ?>>Bank
+                            Unit</option>
+                          <option value="Komposting Skala RT/RW" <?= $data['tipe_fasilitas'] == 'Komposting Skala RT/RW' ? 'selected' : '' ?>>Komposting Skala RT/RW</option>
+                          <option value="Rumah Kompos" <?= $data['tipe_fasilitas'] == 'Rumah Kompos' ? 'selected' : '' ?>>
+                            Rumah Kompos</option>
+                          <option value="Pusat Olah Organik (POO)" <?= $data['tipe_fasilitas'] == 'Pusat Olah Organik (POO)' ? 'selected' : '' ?>>Pusat Olah Organik (POO)</option>
+                          <option value="TPS3R" <?= $data['tipe_fasilitas'] == 'TPS3R' ? 'selected' : '' ?>>TPS3R</option>
+                          <option value="Pusat Daur Ulang (PDU)" <?= $data['tipe_fasilitas'] == 'Pusat Daur Ulang (PDU)' ? 'selected' : '' ?>>Pusat Daur Ulang (PDU)</option>
+                          <option value="TPST di luar TPA" <?= $data['tipe_fasilitas'] == 'TPST di luar TPA' ? 'selected' : '' ?>>TPST di luar TPA</option>
+                          <option value="ITF" <?= $data['tipe_fasilitas'] == 'ITF' ? 'selected' : '' ?>>ITF</option>
+                          <option value="Biodigester" <?= $data['tipe_fasilitas'] == 'Biodigester' ? 'selected' : '' ?>>
+                            Biodigester</option>
+                          <option value="Insinerator" <?= $data['tipe_fasilitas'] == 'Insinerator' ? 'selected' : '' ?>>
+                            Insinerator</option>
+                          <option value="Pirolisis" <?= $data['tipe_fasilitas'] == 'Pirolisis' ? 'selected' : '' ?>>
+                            Pirolisis</option>
+                          <option value="Gasifikasi" <?= $data['tipe_fasilitas'] == 'Gasifikasi' ? 'selected' : '' ?>>
+                            Gasifikasi</option>
+                          <option value="RDF" <?= $data['tipe_fasilitas'] == 'RDF' ? 'selected' : '' ?>>RDF</option>
+                          <option value="TPA/TPST" <?= $data['tipe_fasilitas'] == 'TPA/TPST' ? 'selected' : '' ?>>TPA/TPST
+                          </option>
+                          <option value="Sektor Informal" <?= $data['tipe_fasilitas'] == 'Sektor Informal' ? 'selected' : '' ?>>Sektor Informal</option>
                         </select>
                       </fieldset>
                     </div>
                     <div class="col">
                       <div class="form-group">
                         <label for="basicInput">Tahun</label>
-                        <input type="number" name="tahun" class="form-control" id="basicInput"
+                        <input type="number" name="tahun" class="form-control" value="<?= $data['tahun'] ?>"
                           placeholder="Contoh : 2023" />
                       </div>
                       <div class="form-group">
@@ -210,145 +226,35 @@ require_once ('../../koneksi.php');
                       </div>
                       <div class="form-group">
                         <label for="basicInput">Nama Fasilitas</label>
-                        <input type="text" name="nama_fasilitas" class="form-control" id="basicInput"
-                          placeholder="Contoh : Bank Bandung" />
+                        <input type="text" name="nama_fasilitas" class="form-control"
+                          value="<?= $data['nama_fasilitas'] ?>" placeholder="Contoh : Bank Bandung" />
                       </div>
                       <div class="form-group">
                         <label for="basicInput">Jenis</label>
-                        <input type="text" name="jenis" class="form-control" id="basicInput"
+                        <input type="text" name="jenis" class="form-control" value="<?= $data['jenis'] ?>"
                           placeholder="Contoh : BSU" />
                       </div>
                       <div class="form-group">
                         <label for="basicInput">Status</label>
-                        <input type="text" name="status" class="form-control" id="basicInput"
+                        <input type="text" name="status" class="form-control" value="<?= $data['status'] ?>"
                           placeholder="Contoh : A" />
                       </div>
                       <div class="form-group">
                         <label for="basicInput">Sampah Masuk (kg/tahun)</label>
-                        <input type="number" step=0.01 name="sampah_masuk" class="form-control" id="basicInput"
-                          placeholder="Contoh : 89" />
+                        <input type="number" step="0.01" name="sampah_masuk" class="form-control"
+                          value="<?= $data['sampah_masuk'] ?>" placeholder="Contoh : 89" />
                       </div>
                       <div class="form-group">
                         <label for="basicInput">Sampah Terkelola (kg/tahun)</label>
-                        <input type="number" step=0.01 name="sampah_terkelola" class="form-control" id="basicInput"
-                          placeholder="Contoh : 12" />
+                        <input type="number" step="0.01" name="sampah_terkelola" class="form-control"
+                          value="<?= $data['sampah_terkelola'] ?>" placeholder="Contoh : 12" />
                       </div>
                       <div class="d-flex align-items-center justify-content-end mt-5">
-                        <button type="submit" class="btn btn-primary">Tambah Data</button>
+                        <button type="submit" class="btn btn-primary">Update Data</button>
                       </div>
                     </div>
                   </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section class="section">
-          <div class="row" id="basic-table">
-            <div class="col-12 col-md-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4 class="card-title">Data Timbulan Sampah Yang Masuk</h4>
-                </div>
-                <div class="card-content">
-                  <div class="card-body">
-                    <!-- Table with outer spacing -->
-                    <div class="table-responsive">
-                      <table class="table table-lg">
-                        <thead>
-                          <tr>
-                            <th>No</th>
-                            <th>Username</th>
-                            <th>Tahun</th>
-                            <th>Kabupaten/Kota</th>
-                            <th>Nama Fasilitas</th>
-                            <th>Tipe</th>
-                            <th>Jenis</th>
-                            <th>Status</th>
-                            <th>Sampah Masuk (kg/thn)</th>
-                            <th>Sampah Terkelola (kg/thn)</th>
-                            <th>Aksi</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <?php
-                          include '../../koneksi.php';
-                          $batas = 10;
-                          $halaman = isset($_GET['halaman']) ? (int) $_GET['halaman'] : 1;
-                          $halaman_awal = ($halaman > 1) ? ($halaman * $batas) - $batas : 0;
 
-                          $previous = $halaman - 1;
-                          $next = $halaman + 1;
-                          $data = mysqli_query($koneksi, "select * from fasilitas ");
-                          $jumlah_data = mysqli_num_rows($data);
-                          $total_halaman = ceil($jumlah_data / $batas);
-
-                          $no = 1;
-                          $data = mysqli_query($koneksi, "select * from fasilitas WHERE username = '" . $_SESSION['username'] . "' limit $halaman_awal, $batas ");
-                          while ($d = mysqli_fetch_array($data)) {
-                            ?>
-                            <tr>
-                              <td>
-                                <?= $no++ ?>
-                              </td>
-                              <td>
-                                <?= $d['username'] ?>
-                              </td>
-                              <td>
-                                <?= $d['tipe_fasilitas'] ?>
-                              </td>
-                              <td>
-                                <?= $d['tahun'] ?>
-                              </td>
-                              <td>
-                                <?= $d['kab'] ?>
-                              </td>
-                              <td>
-                                <?= $d['nama_fasilitas'] ?>
-                              </td>
-                              <td>
-                                <?= $d['jenis'] ?>
-                              </td>
-                              <td>
-                                <?= $d['status'] ?>
-                              </td>
-                              <td>
-                                <?= $d['sampah_masuk'] ?>
-                              </td>
-                              <td>
-                                <?= $d['sampah_terkelola'] ?>
-                              </td>
-                              <td><a href="edit-data.php?id=<?= $d['id'] ?>"><button
-                                    class="btn btn-primary">Edit</button></a>
-                                <a href="hapus.php?id=<?= $d['id'] ?>"><button class="btn btn-danger">Hapus</button></a>
-                              </td>
-                            </tr>
-                            <?php
-                          }
-                          ?>
-                        </tbody>
-                      </table>
-                      <nav aria-label="Page navigation example">
-                        <ul class="pagination pagination-primary">
-                          <li class="page-item"><a class="page-link" <?php if ($halaman > 1) {
-                            echo "href='?halaman=$previous'";
-                          } ?>>Prev</a></li>
-                          <?php
-                          for ($x = 1; $x <= $total_halaman; $x++) {
-                            ?>
-                            <li class="page-item"><a class="page-link" href="?halaman=<?php echo $x ?>">
-                                <?php echo $x; ?>
-                              </a></li>
-                            <?php
-                          }
-                          ?>
-                          <li class="page-item"><a class="page-link" <?php if ($halaman < $total_halaman) {
-                            echo "href='?halaman=$next'";
-                          } ?>>Next</a></li>
-                        </ul>
-                      </nav>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

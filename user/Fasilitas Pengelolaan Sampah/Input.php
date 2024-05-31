@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   // Validate required fields
   if (empty($username) || empty($tipe_fasilitas) || empty($tahun) || empty($kab) || empty($nama_fasilitas) || empty($jenis) || empty($status) || empty($sampah_masuk) || empty($sampah_terkelola)) {
-    echo "<script>alert('All fields are required.'); window.location.href='form_page.php';</script>";
+    echo "<script>alert('Isi semua Data yang berada di dalam form.'); window.location.href = document.referrer';</script>";
   } else {
     // Prepare the SQL statement
     $sql = "INSERT INTO fasilitas (username, tipe_fasilitas, tahun, kab, nama_fasilitas, jenis, status, sampah_masuk, sampah_terkelola) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Attempt to execute the prepared statement
       if (mysqli_stmt_execute($stmt)) {
-        echo "<script>alert('Record inserted successfully.');  window.location.href = document.referrer;</script>";
+        echo "<script>alert('Data berhasil Ditambahkan.');  window.location.href = document.referrer;</script>";
       } else {
         echo "<script>alert('ERROR: Could not execute query. " . mysqli_error($koneksi) . "');  window.location.href = document.referrer;</script>";
       }
